@@ -1,7 +1,4 @@
-import { TanStackDevtools } from "@tanstack/react-devtools";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
-import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import TanStackQueryDevtools from "@/integrations/tanstack-query/devtools";
 import { TanStackQueryProvider } from "@/integrations/tanstack-query/root-provider";
 import appCss from "@/styles.css?url";
 
@@ -47,7 +44,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="font-sans antialiased">
         <TanStackQueryProvider>
           {children}
-          <TanStackDevtools
+          {/* <TanStackDevtools
             config={{
               position: "bottom-right",
             }}
@@ -58,7 +55,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               },
               TanStackQueryDevtools,
             ]}
-          />
+          /> */}
         </TanStackQueryProvider>
         <Scripts />
       </body>
