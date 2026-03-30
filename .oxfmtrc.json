@@ -7,15 +7,15 @@
       ["value-builtin", "value-external"],
       ["value-internal", "value-parent", "value-sibling", "value-index"],
       {
-        "newlinesBetween": true,
+        "newlinesBetween": true
       },
       "type-import",
-      "unknown",
-    ],
+      "unknown"
+    ]
   },
   "sortTailwindcss": {
     "stylesheet": "./src/styles.css",
     "functions": ["clsx", "cn"],
-    "preserveWhitespace": true,
-  },
+    "preserveWhitespace": true
+  }
 }
