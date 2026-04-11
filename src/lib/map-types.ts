@@ -5,5 +5,5 @@ export type Coordinates = {
 
 export type MapEntity = {
   id: string;
-  coordinates: Coordinates;
+  lngLat: Coordinates;
 };

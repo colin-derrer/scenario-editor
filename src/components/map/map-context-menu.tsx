@@ -1,11 +1,12 @@
+import { nanoid } from "nanoid";
 import { type MapLayerMouseEvent } from "react-map-gl/maplibre";
-import { useMapplicationContext } from "./map-context";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { entityCollection } from "@/lib/entity-collection";
 
 interface MapContextMenuProps {
   onClose: () => void;
@@ -13,10 +14,8 @@ interface MapContextMenuProps {
 }
 
 export function MapContextMenu({ onClose, event }: MapContextMenuProps) {
-  const mapCtx = useMapplicationContext();
-
   const handleCreateUnit = () => {
-    mapCtx.createEntity({ coordinates: event.lngLat });
+    entityCollection.insert({ id: nanoid(), lngLat: event.lngLat, selected: false });
   };
 
   return (

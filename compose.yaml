@@ -5,14 +5,15 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=mydb
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-      - pg_vol:/var/lib/postgresql:rw
-      - ./my-postgres.conf:/etc/postgresql/postgresql.conf:ro
+      - postgres-data:/var/lib/postgresql
     restart: unless-stopped
+    profiles:
+      - core
 
   martin:
     container_name: martin
@@ -25,13 +26,17 @@ services:
       - ./dev_data/rio/jaxa_terrainrgb_0-12.mbtiles:/opt/mbtiles/jaxa_terrainrgb_0-12.mbtiles
       - ./dev_data/pmtiles/elevation.pmtiles:/opt/pmtiles/elevation.pmtiles
     restart: unless-stopped
+    profiles:
+      - auxillary
 
   maputnik:
     container_name: maputnik
     image: ghcr.io/maplibre/maputnik:main
     network_mode: "host"
+    profiles:
+      - auxillary
     # ports:
     #   - "8888:8000"
 
 volumes:
-  pg_vol:
+  postgres-data:

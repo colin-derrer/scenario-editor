@@ -1,6 +1,6 @@
+import { eq, useLiveQuery } from "@tanstack/react-db";
 import { CarIcon } from "lucide-react";
 import { Marker } from "react-map-gl/maplibre";
-import { useMapplicationContext } from "@/components/map/map-context";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -13,37 +13,33 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { entityCollection } from "@/lib/entity-collection";
 
-import type { MapEntity } from "@/lib/map-types";
 import type React from "react";
 
-type MapUnitProps = {
-  entity: MapEntity;
-};
+export function MapUnit({ entityId }: { entityId: string }) {
+  const { data: entity } = useLiveQuery((q) =>
+    q
+      .from({ it: entityCollection })
+      .where(({ it }) => eq(it.id, entityId))
+      .findOne(),
+  );
 
-export function MapUnit({ entity }: MapUnitProps) {
-  const ctx = useMapplicationContext();
-
-  const isSelected = ctx.selection.has(entity.id);
-  const { coordinates } = entity;
+  if (!entity) throw new Error("Expecting to have an entity be available");
 
   const handleSelectClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!isSelected) {
-      ctx.selectEntity(entity.id);
-    } else {
-      ctx.unselectEntity(entity.id);
-    }
+    entityCollection.update(entity.id, (draft) => (draft.selected = !draft.selected));
   };
 
   return (
-    <Marker longitude={coordinates.lng} latitude={coordinates.lat}>
+    <Marker longitude={entity.lngLat.lng} latitude={entity.lngLat.lat}>
       <ContextMenu>
         <ContextMenuTrigger onContextMenu={(e) => e.stopPropagation()}>
           <div
             className={`rounded-full bg-muted-foreground p-1 ring-2 ring-muted-foreground ring-offset-2 transition-colors hover:opacity-80 data-selected:bg-primary data-selected:ring-primary data-selected:hover:bg-primary/80`}
             onClick={handleSelectClick}
-            data-selected={isSelected}
+            data-selected={entity.selected}
             data-entity-id={entity.id}
           >
             <CarIcon />
@@ -55,10 +51,7 @@ export function MapUnit({ entity }: MapUnitProps) {
               Create command...
               <ContextMenuShortcut>⌘T</ContextMenuShortcut>
             </ContextMenuItem>
-            <ContextMenuItem>
-              Copy
-              <ContextMenuShortcut>⌘C</ContextMenuShortcut>
-            </ContextMenuItem>
+            <ContextMenuItem>{entity.id}</ContextMenuItem>
             <ContextMenuItem>
               Cut
               <ContextMenuShortcut>⌘X</ContextMenuShortcut>
@@ -70,7 +63,7 @@ export function MapUnit({ entity }: MapUnitProps) {
               <ContextMenuGroup>
                 <ContextMenuItem>Copy data as JSON</ContextMenuItem>
                 <ContextMenuItem>
-                  Lng Lat: ({coordinates.lng.toFixed(4)}, {coordinates.lat.toFixed(4)})
+                  Lng Lat: ({entity.lngLat.lng.toFixed(4)}, {entity.lngLat.lat.toFixed(4)})
                 </ContextMenuItem>
               </ContextMenuGroup>
               <ContextMenuSeparator />
