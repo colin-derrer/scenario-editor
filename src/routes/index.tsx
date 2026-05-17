@@ -1,15 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AppMap } from "@/components/map/app-map";
-import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { MapContextMenu } from "@/components/scenario-map/map-context-menu";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { ScenarioMap } from "@/components/scenario-map/scenario-map";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
 
 export const Route = createFileRoute("/")({ component: App });
 
 function App() {
   return (
-    <main className="flex h-dvh w-dvw">
-      <AppSidebar />
-      <AppMap />
-    </main>
+    <div className="flex h-dvh w-dvw">
+      <ScenarioMap />
+    </div>
   );
 }
